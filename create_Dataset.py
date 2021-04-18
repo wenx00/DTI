@@ -1,10 +1,10 @@
-from utils import *
+from utils import load_csv_file
 import json
 import pickle
 
 
 # -------------Create DDI dataset-------------
-DDI_list = load_csv_file('DDI_origin.csv')
+DDI_list = load_csv_file('./assets/DDI_origin.csv')
 DDI_dataset = []
 Drug_dict = {}
 for index, DDI_pair in enumerate(DDI_list):
@@ -15,11 +15,11 @@ for index, DDI_pair in enumerate(DDI_list):
 
     DDI_dataset.append((Drug_dict[DDI_pair[0]], Drug_dict[DDI_pair[1]]))
 
-with open('DDI_dataset.csv', 'w') as fp:
+with open('./assets/DDI_dataset.csv', 'w') as fp:
     fp.write('\n'.join('%s,%s' % x for x in DDI_dataset))
 
 # -------------Create DPI dataset-------------
-DPI_list = load_csv_file('DPI_origin.csv')
+DPI_list = load_csv_file('./assets/DPI_origin.csv')
 DPI_dataset = []
 Protein_dict = {}
 for index, DPI_pair in enumerate(DPI_list):
@@ -30,21 +30,21 @@ for index, DPI_pair in enumerate(DPI_list):
 
     DPI_dataset.append((Drug_dict[DPI_pair[0]], Protein_dict[DPI_pair[1]]))
 
-with open('DPI_dataset.csv', 'w') as fp:
+with open('./assets/DPI_dataset.csv', 'w') as fp:
     fp.write('\n'.join('%s,%s' % x for x in DPI_dataset))
 
 
 # -------------Create PDI dataset-------------
-# PDI_list = load_csv_file('DPI_dataset.csv')
-# PDI_dataset =[]
-# for i, val in enumerate(PDI_list):
-#     PDI_dataset.append((val[1], val[0]))
-# with open('PDI_dataset.csv', 'w') as f:
-#     f.write('\n'.join('%s,%s' % x for x in PDI_dataset))
+PDI_list = load_csv_file('./assets/DPI_dataset.csv')
+PDI_dataset =[]
+for i, val in enumerate(PDI_list):
+    PDI_dataset.append((val[1], val[0]))
+with open('./assets/PDI_dataset.csv', 'w') as f:
+    f.write('\n'.join('%s,%s' % x for x in PDI_dataset))
 
 
 # -------------Create PPI dataset-------------
-PPI_list = load_csv_file('PPI_origin.csv')
+PPI_list = load_csv_file('./assets/PPI_origin.csv')
 PPI_dataset = []
 for index, PPI_pair in enumerate(PPI_list):
     if PPI_pair[0] not in Protein_dict:
@@ -54,13 +54,15 @@ for index, PPI_pair in enumerate(PPI_list):
 
     PPI_dataset.append((Protein_dict[PPI_pair[0]], Protein_dict[PPI_pair[1]]))
 
-with open('PPI_dataset.csv', 'w') as fp:
+
+# -------------Save cache-------------
+with open('./assets/PPI_dataset.csv', 'w') as fp:
     fp.write('\n'.join('%s,%s' % x for x in PPI_dataset))
 
 
-with open('Drug_dict.json', 'w') as fp:
+with open('./assets/Drug_dict.json', 'w') as fp:
     json.dump(Drug_dict, fp)
-with open('Protein_dict.json', 'w') as fp:
+with open('./assets/Protein_dict.json', 'w') as fp:
     json.dump(Protein_dict, fp)
 
 # # JSON load:
@@ -68,13 +70,11 @@ with open('Protein_dict.json', 'w') as fp:
 #     data = json.load(fp)
 
 
-# with open('Drug_dict.pkl', 'wb') as f:
-#     pickle.dump(Drug_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
-# with open('Protein_dict.pkl', 'wb') as f:
-#     pickle.dump(Protein_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+with open('./assets/Drug_dict.pkl', 'wb') as f:
+    pickle.dump(Drug_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+with open('./assets/Protein_dict.pkl', 'wb') as f:
+    pickle.dump(Protein_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-# with open('DDI_dict.pkl', 'wb') as f:
-#     pickle.dump(Drug_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+with open('./assets/DDI_dict.pkl', 'wb') as f:
+    pickle.dump(Drug_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-# with open('parrot.pkl', 'rb') as f:
-#     mynewlist = pickle.load(f)

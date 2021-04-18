@@ -1,0 +1,35 @@
+{
+  "feature_size": {
+    "_type": "choice",
+    "_value": [
+      256,
+      512,
+      1024,
+      2048,
+      4086
+    ]
+  },
+  "batch_size": {
+    "_type": "choice",
+    "_value": [
+      512,
+      1024,
+      2048,
+      4086
+    ]
+  },
+  "learning_rate": {
+    "_type": "loguniform",
+    "_value": [
+      0.0001,
+      0.1
+    ]
+  },
+  "feat_drop": {
+    "_type": "uniform",
+    "_value": [
+      0,
+      0.2
+    ]
+  }
+}

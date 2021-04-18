@@ -19,9 +19,9 @@ from utils import *
 
 # ===================================================
 # # Load Data
-Drug_Drug_Interactions = load_csv_file("DDI_dataset.csv")
-Drug_Protein_Interactions = load_csv_file("DPI_dataset.csv")
-Protein_Protein_Interactions = load_csv_file("PPI_dataset.csv")
+Drug_Drug_Interactions = load_csv_file("./assets/DDI_dataset.csv")
+Drug_Protein_Interactions = load_csv_file("./assets/DPI_dataset.csv")
+Protein_Protein_Interactions = load_csv_file("./assets/PPI_dataset.csv")
 # Protein_Drug_Interactions = load_csv_file('PDI_dataset.csv')
 
 # Create Graph
@@ -31,13 +31,28 @@ g = dgl.heterograph({
     ('drug', 'DDI', 'drug'): Drug_Drug_Interactions,
     ('protein', 'PPI', 'protein'): Protein_Protein_Interactions
 })
-with open('g.pkl', 'wb') as f:
+with open('./assets/g.pkl', 'wb') as f:
     pickle.dump(g, f)
 # Check Graph
 g.number_of_nodes('drug')
 g.number_of_edges('PPI')
+
+drug_features = torch.empty((g.number_of_nodes('drug'), 1024))
+protein_features = torch.empty((g.number_of_nodes('protein'), 1024))
+nn.init.xavier_uniform_(drug_features, gain=nn.init.calculate_gain('relu'))
+nn.init.xavier_uniform_(protein_features, gain=nn.init.calculate_gain('relu'))
+node_features = {
+    'drug': drug_features,
+    'protein': protein_features
+}
+g.ndata['feat'] = node_features
+
+with open('./assets/g_feat.pkl', 'wb') as f:
+    pickle.dump(g, f)
 # ===================================================
-input("OK")
+input("Done, plz terminate it!")
+
+
 with open('g.pkl', 'rb') as f:
     g = pickle.load(f)
 
@@ -202,7 +217,6 @@ def sample_blocks(self, seeds):
             cur[ntype] = block.srcnodes[ntype].data[dgl.NID]
         blocks.insert(0, block)
     return seeds, blocks
-
 
 # for epoch in range(100):
 #     logits = model(g)

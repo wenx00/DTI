@@ -1,0 +1,42 @@
+authorName: wxfan
+experimentName: DTI_experiment_GAT
+trialConcurrency: 1
+maxExecDuration: 30h
+maxTrialNum: 9999
+logDir: /home/wxfan/nni/experiment
+logLevel: debug
+#可选项: local, remote, pai, kubeflow
+trainingServicePlatform: local
+searchSpacePath: /home/wxfan/tmp/pycharm_project_438/nni/search_space.json
+#可选项: true, false
+useAnnotation: false
+tuner:
+  #可选项: TPE, Random, Anneal, Evolution
+  builtinTunerName: TPE
+  classArgs:
+    #可选项: maximize, minimize
+    optimize_mode: maximize
+assessor:
+  builtinAssessorName: Curvefitting
+  classArgs:
+    # (必须) epoch 的总数。
+    # 需要此数据来决定需要预测的点。
+    epoch_num: 20
+    # (可选) 为了节约计算资源，仅在收到 start_step 个中间结果后，才开始进行预测。
+    # start_step 的默认值是 6。
+    start_step: 6
+    # (可选) 决定是否提前终止的阈值。
+    # 例如，如果 threshold = 0.95，最好的历史结果是 0.9，那么会在 Trial 的预测值低于 0.95 * 0.9 = 0.855 时停止。
+    # 阈值的默认值是 0.95。
+    threshold: 0.9
+    # (可选) gap 是两次评估之间的间隔次数。
+    # 例如：如果 gap = 2, start_step = 6，就会评估第 6, 8, 10, 12... 个中间结果。
+    # gap 的默认值是 1。
+    gap: 1
+trial:
+  command: python GAT.py
+  codeDir: /home/wxfan/tmp/pycharm_project_438
+  gpuNum: 1
+localConfig:
+  useActiveGpu: True
+  maxTrialNumPerGpu: 1
